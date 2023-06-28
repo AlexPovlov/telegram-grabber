@@ -1,13 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
 
-router = APIRouter(
-    prefix="/chat",
-    tags=["Chat"]
-    )
+router = APIRouter("/chat", tags=["Chat"])
 
 
 @router.post("/all")
 async def chats():
     pass
-

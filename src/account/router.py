@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends
-from .schemas import CodeRequest, AuthRequest, AccountResponse
 from typing import List
+
+from fastapi import APIRouter, Depends
+
+from .schemas import AccountResponse, AuthRequest, CodeRequest
 from .service import AccountService
 
 router = APIRouter(prefix="/account", tags=["Account"])

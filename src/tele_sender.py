@@ -1,11 +1,9 @@
-from telethon import TelegramClient, errors
 import random
-from .conf import (
-    TELEGRAM_API_ID,
-    TELEGRAM_API_HASH,
-    TELEGRAM_APP_VERSION,
-    TELEGRAM_DEVICE,
-)
+
+from telethon import TelegramClient, errors
+
+from .conf import (TELEGRAM_API_HASH, TELEGRAM_API_ID, TELEGRAM_APP_VERSION,
+                   TELEGRAM_DEVICE)
 
 
 class Sender:
@@ -33,9 +31,9 @@ class Sender:
             await self.client.sign_in(
                 number, code, password=tfa, phone_code_hash=phone_code_hash
             )
-        except errors.SessionPasswordNeededError as e:
+        except errors.SessionPasswordNeededError:
             await self.client.sign_in(password=tfa)
-        except e:
+        except Exception as e:
             raise e
 
     async def get_chats(self):

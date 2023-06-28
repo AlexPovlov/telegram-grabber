@@ -1,8 +1,10 @@
-from fastapi import Depends
-from .repository import AccountRepository
-from src.tele_sender import Sender
 from typing import Optional
-from fastapi import HTTPException
+
+from fastapi import Depends, HTTPException
+
+from src.tele_sender import Sender
+
+from .repository import AccountRepository
 
 
 class AccountService:
@@ -17,7 +19,7 @@ class AccountService:
                     {"phone": phone},
                     {"phone_hash": response.phone_code_hash},
                 )
-            except:
+            except Exception:
                 return False
         return True
 
@@ -29,11 +31,11 @@ class AccountService:
 
         async with Sender(phone) as sender:
             try:
-                response = await sender.sign_in(
+                await sender.sign_in(
                     account_db.phone, account_db.phone_hash, code, tfa
                 )
                 await self.repo.update(account_db, {"auth": True})
-            except:
+            except Exception:
                 raise HTTPException(status_code=500, detail="Failed to login")
         return True
 
@@ -49,6 +51,6 @@ class AccountService:
         async with Sender(account.phone) as sender:
             try:
                 await sender.log_out()
-            except:
+            except Exception:
                 raise HTTPException(status_code=500, detail="Failed to logout")
         return True

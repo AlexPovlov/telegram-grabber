@@ -1,7 +1,8 @@
-from sqlalchemy import String, Column, Integer, Boolean
+from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
+
 
 class Account(Base):
     __tablename__ = 'accounts'
@@ -12,6 +13,7 @@ class Account(Base):
     phone_hash = Column(String, nullable=True)
     auth = Column(Boolean, default=False)
     state = Column(String, nullable=True)
+
 
 def account():
     return Account

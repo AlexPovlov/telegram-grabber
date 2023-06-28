@@ -1,4 +1,5 @@
 import logging
+
 from .conf import path_errors
 
 logger = logging.getLogger(__name__)
@@ -14,4 +15,3 @@ file_handler.setFormatter(formatter)
 
 # Добавление обработчика в логгер
 logger.addHandler(file_handler)
-

@@ -1,7 +1,9 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Type, TypeVar
-from sqlalchemy.future import select
+from typing import TypeVar
+
 from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+
 from src.database import get_db
 
 # Определим обобщенный тип для моделей

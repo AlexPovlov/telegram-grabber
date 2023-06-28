@@ -1,8 +1,9 @@
-from src.base_repository import CRUDRepository
-from sqlalchemy.future import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
-from src.account.models import Account, account
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+
+from src.account.models import Account
+from src.base_repository import CRUDRepository
 from src.database import get_db
 
 
