@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 
-from .account.router import router as account_router
-from .logger import logger
+
+from .logger.logger import logger
+from .routers.account_router import router as account_router
+from .routers.login_router import router as login_router
 
 app = FastAPI()
 
@@ -15,3 +17,4 @@ async def exception_handler(request, exc):
 
 
 app.include_router(account_router)
+app.include_router(login_router)

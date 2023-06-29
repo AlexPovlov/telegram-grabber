@@ -1,9 +1,7 @@
-from datetime import datetime, timedelta
-from fastapi import APIRouter, Depends
-from fastapi import Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Annotated
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from src.schemas.user_schemas import Token, User
+from fastapi.security import OAuth2PasswordRequestForm
+from src.schemas.user_schemas import Token
 from src.services.user_service import UserService
 
 router = APIRouter(tags=["Auth"])

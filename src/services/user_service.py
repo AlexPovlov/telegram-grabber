@@ -2,7 +2,7 @@ from fastapi import Depends
 from datetime import datetime, timedelta
 from src.repositories.user_repository import UserRepository
 from src.hash import Hash
-from jose import JWTError, jwt
+from jose import jwt
 from src.conf import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 
 

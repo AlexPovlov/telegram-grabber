@@ -1,4 +1,4 @@
-alembicalembic==1.11.1
+alembic==1.11.1
 anyio==3.7.0
 exceptiongroup==1.1.1
 fastapi[dotenv]==0.98.0
@@ -17,3 +17,7 @@ Telethon==1.28.5
 typing_extensions==4.6.3
 asyncpg==0.27.0
 python-dotenv==1.0.0
+ecdsa==0.18.0
+python-jose==3.3.0
+bcrypt==4.0.1 
+passlib==1.7.4
