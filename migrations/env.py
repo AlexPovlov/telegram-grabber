@@ -9,7 +9,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from src.conf import DB_CONNECTION_URI
 from src.models.account import Account
 from src.models.user import User
+from src.models.chat import Chat, ChatToChat
 from src.db.database import Base
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

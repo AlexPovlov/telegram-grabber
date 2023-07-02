@@ -39,6 +39,8 @@ class Sender:
             raise e
 
     async def get_chats(self):
+        # dialogs = await self.client.get_dialogs(limit=10)
+        # # print(dialogs)
         return await self.client.get_dialogs()
 
     async def send(self):

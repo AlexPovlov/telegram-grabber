@@ -3,7 +3,6 @@ from typing import Optional
 from fastapi import Depends, HTTPException
 
 from src.libs.tele_sender import Sender
-
 from src.repositories.account_repository import AccountRepository
 
 
@@ -52,3 +51,18 @@ class AccountService:
             except Exception:
                 raise HTTPException(status_code=500, detail="Failed to logout")
         return True
+
+    async def get_all_chats(self, account_id: int):
+        account = await self.repo.get(account_id)
+
+        if not account:
+            raise HTTPException(status_code=404, detail="Account not found")
+        
+        async with Sender(account.phone) as sender:
+            try:
+                chats = await sender.get_chats()
+                chats_data = await self.repo.create_many_chats(account_id, chats)
+                
+                return chats_data
+            except Exception:
+                raise HTTPException(status_code=500, detail="Failed get chats")
