@@ -3,9 +3,15 @@ from typing import List
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from src.schemas.account_schemas import AccountResponse, AuthRequest, CodeRequest, AccountSingleResponse
+from src.schemas.account_schemas import (
+    AccountResponse,
+    AuthRequest,
+    CodeRequest,
+    AccountSingleResponse,
+)
 from src.services.account_service import AccountService
 from src.models.account import Account
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(prefix="/account", tags=["Account"])
@@ -45,15 +51,16 @@ async def account(
     # token: Annotated[str, Depends(oauth2_scheme)],
     service: AccountService = Depends(AccountService),
 ):
-    account = Account.filter(id=id).prefetch_related('chats')
-    # account = account.prefetch_related('chats')
+    account = await Account.filter(id=id).first().prefetch_related("chats")
+    # data = await account.fetch_for_list([account], "chats")
+    print(account)
     # data = await service.account(id, ['chats'])
     # await data.fetch_related('chats')
-    # print(f'data {account.chats}')
-    print(AccountSingleResponse.schema_json())
-    data = await AccountSingleResponse.from_queryset(account)
-    print(data.json())
+    print(f"data {account.chats}")
+    data = await AccountSingleResponse.from_tortoise_orm(account)
+    print(data.schema_json())
     return data
+
 
 @router.delete("/{account_id}/logout", response_model=None)
 async def logout(

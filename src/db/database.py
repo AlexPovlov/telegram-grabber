@@ -20,7 +20,13 @@ from tortoise import Tortoise
 async def init_db():
     await Tortoise.init(
         db_url=DB_CONNECTION_URI,
-        modules={"models": ["src.models.account", "src.models.chat", "src.models.grabber_chat"]},
+        modules={
+            "models": [
+                "src.models.account",
+                # "src.models.chat",
+                # "src.models.grabber_chat",
+            ]
+        },
     )
     await Tortoise.generate_schemas()
 

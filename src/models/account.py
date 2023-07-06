@@ -1,6 +1,6 @@
 from tortoise.models import Model
 from tortoise import fields
-from .chat import Chat
+
 
 class Account(Model):
     id = fields.IntField(pk=True)
@@ -13,3 +13,19 @@ class Account(Model):
 
     class Meta:
         table = "accounts"
+
+
+from tortoise.models import Model
+from tortoise import fields
+
+
+class Chat(Model):
+    id = fields.IntField(pk=True)
+    title = fields.CharField(max_length=255, null=False)
+    chat_id = fields.CharField(max_length=255, null=False)
+    account: fields.ForeignKeyRelation[Account] = fields.ForeignKeyField(
+        "models.Account", related_name="chats"
+    )
+
+    class Meta:
+        table = "chats"
