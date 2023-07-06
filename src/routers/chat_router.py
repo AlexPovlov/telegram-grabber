@@ -1,13 +1,13 @@
-from fastapi import APIRouter, Depends
+# from fastapi import APIRouter, Depends
 
-from src.schemas.chat_schemas import ToChats
-from src.services.chat_service import ChatService
+# from src.schemas.chat_schemas import ToChats
+# from src.services.chat_service import ChatService
 
-router = APIRouter(prefix="/chat", tags=["Chat"])
+# router = APIRouter(prefix="/chat", tags=["Chat"])
 
 
-@router.post("/{chat_id}/settochats", response_model=None)
-async def set_to_chats(
-    chat_id: int, chats: ToChats, service: ChatService = Depends(ChatService)
-):
-    pass
+# @router.post("/{chat_id}/settochats", response_model=None)
+# async def set_to_chats(
+#     chat_id: int, chats: ToChats, service: ChatService = Depends(ChatService)
+# ):
+#     await service.set_to_chats([1,2,3])

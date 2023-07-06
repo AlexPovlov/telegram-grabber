@@ -1,15 +1,15 @@
-from sqlalchemy import Boolean, Column, Integer, String
-from sqlalchemy.orm import relationship
-
-from src.db.database import Base
+from tortoise.models import Model
+from tortoise import fields
 
 
-class Account(Base):
-    __tablename__ = "accounts"
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=True)
-    phone = Column(String, nullable=False)
-    phone_hash = Column(String, nullable=True)
-    auth = Column(Boolean, default=False, nullable=False)
-    state = Column(String, nullable=True)
+class Account(Model):
+    id = fields.IntField(pk=True)
+    name = fields.CharField(max_length=255, null=True)
+    phone = fields.CharField(max_length=255)
+    phone_hash = fields.CharField(max_length=255, null=True)
+    auth = fields.BooleanField(default=False)
+    state = fields.CharField(max_length=255, null=True)
     # chats = relationship('Chat', back_populates="account")
+
+    class Meta:
+        table = "accounts"

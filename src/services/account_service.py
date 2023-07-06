@@ -13,13 +13,18 @@ class AccountService:
     async def send_code(self, phone: str):
         async with Sender(phone) as sender:
             try:
-                response = await sender.send_code(phone)
-                await self.repo.first_or_create(
-                    {"phone": phone},
-                    {"phone_hash": response.phone_code_hash},
-                )
+                account = await self.repo.get_from_number(phone)
+                if not account:
+                    response = await sender.send_code(phone)
+                    await self.repo.create({"phone_hash": response.phone_code_hash})
+                elif not account.auth:
+                    response = await sender.send_code(phone)
+                    await self.repo.update(
+                        account, {"phone_hash": response.phone_code_hash}
+                    )
             except Exception:
                 raise HTTPException(status_code=500, detail="Failed send code")
+
         return True
 
     async def auth(self, phone: str, code: str, tfa: Optional[str] = None):
@@ -28,16 +33,23 @@ class AccountService:
         if not account_db:
             raise HTTPException(status_code=404, detail="Account not found")
 
+        if account_db.auth:
+            return False
+
         async with Sender(phone) as sender:
             try:
                 await sender.sign_in(account_db.phone, account_db.phone_hash, code, tfa)
                 await self.repo.update(account_db, {"auth": True})
             except Exception:
                 raise HTTPException(status_code=500, detail="Failed to login")
+
         return True
 
     async def accounts(self):
         return await self.repo.get_all()
+
+    async def account(self, id):
+        return await self.repo.get(id)
 
     async def logout(self, account_id: int):
         account = await self.repo.get(account_id)
@@ -48,6 +60,7 @@ class AccountService:
         async with Sender(account.phone) as sender:
             try:
                 await sender.log_out()
+                await self.repo.delete(account)
             except Exception:
                 raise HTTPException(status_code=500, detail="Failed to logout")
         return True
@@ -57,12 +70,12 @@ class AccountService:
 
         if not account:
             raise HTTPException(status_code=404, detail="Account not found")
-        
+
         async with Sender(account.phone) as sender:
             try:
                 chats = await sender.get_chats()
                 chats_data = await self.repo.create_many_chats(account_id, chats)
-                
+
                 return chats_data
             except Exception:
                 raise HTTPException(status_code=500, detail="Failed get chats")

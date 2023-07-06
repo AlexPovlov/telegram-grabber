@@ -39,6 +39,15 @@ async def accounts(
     return await service.accounts()
 
 
+@router.get("/{id}", response_model=AccountResponse)
+async def account(
+    id: int,
+    # token: Annotated[str, Depends(oauth2_scheme)],
+    service: AccountService = Depends(AccountService),
+):
+    return await service.account(id)
+
+
 @router.delete("/{account_id}/logout", response_model=None)
 async def logout(
     # token: Annotated[str, Depends(oauth2_scheme)],

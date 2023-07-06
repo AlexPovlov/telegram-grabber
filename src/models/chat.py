@@ -1,20 +1,13 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
-
-from src.db.database import Base
+from tortoise.models import Model
+from tortoise import fields
 
 
-class Chat(Base):
-    __tablename__ = "chats"
-    id = Column(Integer, primary_key=True)
-    title = Column(String, nullable=False)
-    chat_id = Column(String, nullable=False, unique=True)
-    account_id = Column(Integer, ForeignKey("accounts.id", ondelete="CASCADE"))
+class Chat(Model):
+    id = fields.IntField(pk=True)
+    title = fields.CharField(max_length=255, null=False)
+    chat_id = fields.CharField(max_length=255, null=False)
+    account_id = fields.ForeignKeyField("models.Account", "chat")
+    # from_chats = fields.BackwardFKRelation()
 
-
-class ChatToChat(Base):
-    __tablename__ = "chat_to_chat"
-    id = Column(Integer, primary_key=True)
-    from_chat_id = Column(Integer, ForeignKey(Chat.id, ondelete="CASCADE"))
-    to_chat_id = Column(Integer, ForeignKey(Chat.id, ondelete="CASCADE"))
-    last_message = Column(String, nullable=True)
+    class Meta:
+        table = "chats"

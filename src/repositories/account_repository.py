@@ -1,30 +1,27 @@
 from fastapi import Depends
-from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.db.database import get_db
+# from src.db.database import get_db
 from src.models.account import Account
-from src.models.chat import Chat
+
+# from src.models.chat import Chat
 
 from .base_repository import CRUDRepository
-from .chat_repository import ChatRepository
+
+# from .chat_repository import ChatRepository
 
 
 class AccountRepository(CRUDRepository):
     def __init__(
         self,
         model: Account = Depends(lambda: Account),
-        db: AsyncSession = Depends(get_db),
     ):
-        super().__init__(model, db)
+        super().__init__(model)
 
     async def get_from_number(self, phone):
-        query = select(self.model).where(self.model.phone == phone)
-        result = await self.db.execute(query)
-        return result.scalars().first()
+        return await self.model.filter(phone=phone).first()
 
     async def create_many_chats(self, account_id, chats):
-        chat_data = {}
+        chat_data = []
 
         for chat in chats:
             chat_data[str(chat.id)] = {

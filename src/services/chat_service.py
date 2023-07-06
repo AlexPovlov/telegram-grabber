@@ -1,5 +1,3 @@
-
-
 from fastapi import Depends, HTTPException
 
 from src.libs.tele_sender import Sender
@@ -10,8 +8,5 @@ class ChatService:
     def __init__(self, repo: ChatRepository = Depends(ChatRepository)):
         self.repo = repo
 
-    
-    
-
-
-    
+    async def set_to_chats(self, chat_ids: set):
+        await self.repo.set_to(chat_ids)
