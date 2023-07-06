@@ -22,8 +22,8 @@ class CRUDRepository:
     async def create(self, item_data: dict) -> ModelType:
         return await self.model.create(**item_data)
 
-    async def get(self, item_id: int, *args, **kwargs) -> ModelType:
-        return await self.model.filter(*args, **kwargs).get(id=item_id)
+    async def get(self, item_id: int, relation: set = [], *args, **kwargs) -> ModelType:
+        return await self.model.filter(id=item_id).first()
 
     async def update(self, item: Model, item_data: dict) -> ModelType:
         item = item.update_from_dict(item_data)

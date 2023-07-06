@@ -3,9 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from src.schemas.account_schemas import AccountResponse, AuthRequest, CodeRequest
+from src.schemas.account_schemas import AccountResponse, AuthRequest, CodeRequest, AccountSingleResponse
 from src.services.account_service import AccountService
-
+from src.models.account import Account
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(prefix="/account", tags=["Account"])
@@ -39,14 +39,21 @@ async def accounts(
     return await service.accounts()
 
 
-@router.get("/{id}", response_model=AccountResponse)
+@router.get("/{id}")
 async def account(
     id: int,
     # token: Annotated[str, Depends(oauth2_scheme)],
     service: AccountService = Depends(AccountService),
 ):
-    return await service.account(id)
-
+    account = Account.filter(id=id).prefetch_related('chats')
+    # account = account.prefetch_related('chats')
+    # data = await service.account(id, ['chats'])
+    # await data.fetch_related('chats')
+    # print(f'data {account.chats}')
+    print(AccountSingleResponse.schema_json())
+    data = await AccountSingleResponse.from_queryset(account)
+    print(data.json())
+    return data
 
 @router.delete("/{account_id}/logout", response_model=None)
 async def logout(

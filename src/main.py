@@ -35,7 +35,7 @@ async def shutdown():
 register_tortoise(
     app,
     db_url=DB_CONNECTION_URI,
-    modules={"models": ["src.models.account", "src.models.chat"]},
+    modules={"models": ["src.models.account", "src.models.chat", "src.models.grabber_chat"]},
     generate_schemas=True,
     add_exception_handlers=True,
 )

@@ -1,6 +1,6 @@
 from tortoise.models import Model
 from tortoise import fields
-
+from .chat import Chat
 
 class Account(Model):
     id = fields.IntField(pk=True)
@@ -9,7 +9,7 @@ class Account(Model):
     phone_hash = fields.CharField(max_length=255, null=True)
     auth = fields.BooleanField(default=False)
     state = fields.CharField(max_length=255, null=True)
-    # chats = relationship('Chat', back_populates="account")
+    chats: fields.ReverseRelation["Chat"]
 
     class Meta:
         table = "accounts"

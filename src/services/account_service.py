@@ -48,8 +48,11 @@ class AccountService:
     async def accounts(self):
         return await self.repo.get_all()
 
-    async def account(self, id):
-        return await self.repo.get(id)
+    async def account(self, id, relation: set = []):
+        data = await self.repo.get(id, relation)
+
+        print(data)
+        return data
 
     async def logout(self, account_id: int):
         account = await self.repo.get(account_id)
