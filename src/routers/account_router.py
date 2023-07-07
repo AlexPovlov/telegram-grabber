@@ -44,24 +44,6 @@ async def accounts(
 ):
     return await service.accounts()
 
-
-@router.get("/{id}")
-async def account(
-    id: int,
-    # token: Annotated[str, Depends(oauth2_scheme)],
-    service: AccountService = Depends(AccountService),
-):
-    account = await Account.filter(id=id).first().prefetch_related("chats")
-    # data = await account.fetch_for_list([account], "chats")
-    print(account)
-    # data = await service.account(id, ['chats'])
-    # await data.fetch_related('chats')
-    print(f"data {account.chats}")
-    data = await AccountSingleResponse.from_tortoise_orm(account)
-    print(data.schema_json())
-    return data
-
-
 @router.delete("/{account_id}/logout", response_model=None)
 async def logout(
     # token: Annotated[str, Depends(oauth2_scheme)],
@@ -72,7 +54,7 @@ async def logout(
     return True
 
 
-@router.get("/{account_id}/chats", response_model=None)
+@router.get("/{account_id}/chats")
 async def chats(
     # token: Annotated[str, Depends(oauth2_scheme)],
     account_id: int,

@@ -23,7 +23,7 @@ class CRUDRepository:
         return await self.model.create(**item_data)
 
     async def get(self, item_id: int, relation: set = [], *args, **kwargs) -> ModelType:
-        return await self.model.filter(id=item_id).first()
+        return await self.model.filter(id=item_id).prefetch_related(*relation).first()
 
     async def update(self, item: Model, item_data: dict) -> ModelType:
         item = item.update_from_dict(item_data)
@@ -39,33 +39,35 @@ class CRUDRepository:
     async def first_or_create(self, item_search: dict, item_data: dict) -> ModelType:
         return await self.model.update_or_create(item_data, **item_search)
 
-    # async def upsert_data(self, entries: dict, key, **kwrds):
-    #     entries_to_insert = []
-    #     entries = entries.copy()
-    #     # get all entries to be updated
-    #     s_query = (
-    #         select(self.model)
-    #         .filter(getattr(self.model, key).in_(entries.keys()))
-    #         .filter_by(**kwrds)
-    #     )
+    async def upsert(self, data: dict, key: str):
 
-    #     result = await self.db.execute(s_query)
-    #     items = result.scalars().all()
+        unique_fields = [item[key] for item in data]
 
-    #     for each in items:
-    #         entry = entries.pop(str(getattr(each, key)))
-    #         await self.update(each, entry)
+        existing_models = await self.model.filter(**{f"{key}__in": unique_fields}).all()
 
-    #     # get all entries to be inserted
-    #     for entry in entries.values():
-    #         entries_to_insert.append(entry)
+        existing_models_dict = {getattr(model,key): model for model in existing_models}
 
-    #     if entries_to_insert:
-    #         i_query = insert(self.model).values(entries_to_insert)
-    #         await self.db.execute(i_query)
+        models_to_create = []
+        models_to_update = []
 
-    #     await self.db.commit()
+        for item in data:
+            unique_field = item[key]
+            fields = item.keys()
+            if unique_field in existing_models_dict:
+                model = existing_models_dict[unique_field]
+                model.update_from_dict(item)
+                models_to_update.append(model)
+            else:
+                model = self.model(**item)
+                models_to_create.append(model)
 
-    # async def upsert_and_delete(self, entries: dict, key, *args, **kwrds):
-    #     await self.delete_filter(getattr(self.model, key).not_in(entries.keys()))
-    #     await self.upsert_data(entries, key, **kwrds)
+        if models_to_create:
+            await self.model.bulk_create(models_to_create)
+
+        if models_to_update:
+            await self.model.bulk_update(models_to_update, fields=fields)
+
+    async def upsert_and_delete(self, entries: dict, key: str):
+        unique_fields = [item[key] for item in entries]
+        await self.delete_filter(**{f"{key}__in": unique_fields})
+        await self.upsert(entries, key)

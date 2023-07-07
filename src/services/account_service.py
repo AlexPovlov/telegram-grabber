@@ -5,6 +5,9 @@ from fastapi import Depends, HTTPException
 from src.libs.tele_sender import Sender
 from src.repositories.account_repository import AccountRepository
 
+from src.models.chat import Chat
+
+from src.repositories.chat_repository import ChatRepository
 
 class AccountService:
     def __init__(self, repo: AccountRepository = Depends(AccountRepository)):
@@ -77,8 +80,15 @@ class AccountService:
         async with Sender(account.phone) as sender:
             try:
                 chats = await sender.get_chats()
-                chats_data = await self.repo.create_many_chats(account_id, chats)
+                chats_data = await self.save_many_chats(chats,account_id)
 
                 return chats_data
             except Exception:
                 raise HTTPException(status_code=500, detail="Failed get chats")
+
+    async def save_many_chats(chats, account_id):
+        chat_data = [{"title": chat.title, "chat_id": str(chat.id), "account_id": account_id} for chat in chats]
+        chat_repo = ChatRepository(Chat)
+        await chat_repo.upsert_and_delete(chat_data, "chat_id")
+
+        return chat_data
