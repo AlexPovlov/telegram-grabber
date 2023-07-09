@@ -10,14 +10,14 @@ from src.schemas.account_schemas import (
     AccountSingleResponse,
 )
 from src.services.account_service import AccountService
-from src.models.account import Account
+from src.services.chat_service import ChatService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(prefix="/account", tags=["Account"])
 
 
-@router.post("/send_code", response_model=None)
+@router.post("/send_code", response_model=bool)
 async def send_code(
     # token: Annotated[str, Depends(oauth2_scheme)],
     account: CodeRequest,
@@ -27,7 +27,7 @@ async def send_code(
     return True
 
 
-@router.post("/auth", response_model=None)
+@router.post("/auth", response_model=bool)
 async def auth(
     # token: Annotated[str, Depends(oauth2_scheme)],
     account: AuthRequest,
@@ -44,7 +44,8 @@ async def accounts(
 ):
     return await service.accounts()
 
-@router.delete("/{account_id}/logout", response_model=None)
+
+@router.delete("/{account_id}/logout", response_model=bool)
 async def logout(
     # token: Annotated[str, Depends(oauth2_scheme)],
     account_id: int,
@@ -54,11 +55,15 @@ async def logout(
     return True
 
 
-@router.get("/{account_id}/chats")
+@router.get("/{account_id}/chats", response_model=AccountSingleResponse)
 async def chats(
     # token: Annotated[str, Depends(oauth2_scheme)],
     account_id: int,
     service: AccountService = Depends(AccountService),
+    chat_service: ChatService = Depends(ChatService),
 ):
-    data = await service.get_all_chats(account_id)
+    account = await service.get(account_id)
+    chats = await service.get_all_chats(account_id)
+    await chat_service.save_many_chats(chats, account_id)
+    data = await AccountSingleResponse.from_tortoise_orm(account)
     return data

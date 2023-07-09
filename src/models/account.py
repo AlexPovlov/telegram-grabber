@@ -1,8 +1,7 @@
-from tortoise.models import Model
-from tortoise import fields
+from tortoise import fields, models
 
 
-class Account(Model):
+class Account(models.Model):
     id = fields.IntField(pk=True)
     name = fields.CharField(max_length=255, null=True)
     phone = fields.CharField(max_length=255)
@@ -10,7 +9,5 @@ class Account(Model):
     auth = fields.BooleanField(default=False)
     state = fields.CharField(max_length=255, null=True)
 
-
     class Meta:
         table = "accounts"
-

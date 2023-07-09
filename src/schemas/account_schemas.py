@@ -1,9 +1,13 @@
-from typing import Optional, List
-from .chat_schemas import Chat
+from typing import List, Optional
+
 from pydantic import BaseModel
-from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
-from tortoise import fields
+from tortoise.contrib.pydantic import pydantic_model_creator
+
 from src.models.account import Account
+
+from .chat_schemas import ChatSchema
+
+
 class CodeRequest(BaseModel):
     phone: str
 
@@ -22,13 +26,16 @@ class AccountResponse(BaseModel):
     class Config:
         orm_mode = True
 
-# class AccountSingleResponse(BaseModel):
-#     id: int
-#     name: Optional[str]
-#     phone: str
-#     # chats: fields.ReverseRelation[Chat]
 
-#     class Config:
-#         orm_mode = True
+AccountSchema = pydantic_model_creator(
+    Account,
+    include=(
+        "phone",
+        "name",
+        "id",
+    ),
+)
 
-AccountSingleResponse = pydantic_model_creator(Account, name="Account", include=["chats", "phone"])
+
+class AccountSingleResponse(AccountSchema):
+    chats: List[ChatSchema]

@@ -1,6 +1,6 @@
-from src.conf import DB_CONNECTION_URI
-
 from tortoise import Tortoise
+
+from src.conf import DB_CONNECTION_URI
 
 
 async def init_db():
@@ -11,6 +11,8 @@ async def init_db():
                 "src.models.account",
                 "src.models.chat",
                 "src.models.grabber_chat",
+                "src.models.spam_chat",
+                "src.models.user",
             ]
         },
     )

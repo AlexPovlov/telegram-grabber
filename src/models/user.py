@@ -1,12 +1,13 @@
-# from sqlalchemy import Boolean, Column, Integer, String
-
-# from src.db.database import Base
+from tortoise import fields, models
 
 
-# class User(Base):
-#     __tablename__ = "users"
-#     id = Column(Integer, primary_key=True)
-#     username = Column(String)
-#     email = Column(String, nullable=True)
-#     password = Column(String)
-#     disabled = Column(Boolean, default=False)
+class User(models.Model):
+    __tablename__ = "users"
+    id = fields.IntField(pk=True)
+    username = fields.CharField(max_length=255, null=False)
+    email = fields.CharField(max_length=255, null=True)
+    password = fields.CharField(max_length=255, null=False)
+    disabled = fields.BooleanField(default=False)
+
+    class Meta:
+        table = "users"

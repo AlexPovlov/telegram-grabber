@@ -22,8 +22,8 @@ class CRUDRepository:
     async def create(self, item_data: dict) -> ModelType:
         return await self.model.create(**item_data)
 
-    async def get(self, item_id: int, relation: set = [], *args, **kwargs) -> ModelType:
-        return await self.model.filter(id=item_id).prefetch_related(*relation).first()
+    async def get(self, item_id: int, *args, **kwargs) -> ModelType:
+        return await self.model.filter(id=item_id).first()
 
     async def update(self, item: Model, item_data: dict) -> ModelType:
         item = item.update_from_dict(item_data)
@@ -39,13 +39,14 @@ class CRUDRepository:
     async def first_or_create(self, item_search: dict, item_data: dict) -> ModelType:
         return await self.model.update_or_create(item_data, **item_search)
 
-    async def upsert(self, data: dict, key: str):
-
+    async def upsert(self, data: dict, key: str, *args, **kwargs):
         unique_fields = [item[key] for item in data]
 
-        existing_models = await self.model.filter(**{f"{key}__in": unique_fields}).all()
+        existing_models = await self.model.filter(
+            *args, **kwargs, **{f"{key}__in": unique_fields}
+        ).all()
 
-        existing_models_dict = {getattr(model,key): model for model in existing_models}
+        existing_models_dict = {getattr(model, key): model for model in existing_models}
 
         models_to_create = []
         models_to_update = []
@@ -67,7 +68,7 @@ class CRUDRepository:
         if models_to_update:
             await self.model.bulk_update(models_to_update, fields=fields)
 
-    async def upsert_and_delete(self, entries: dict, key: str):
+    async def upsert_and_delete(self, entries: dict, key: str, *args, **kwargs):
         unique_fields = [item[key] for item in entries]
-        await self.delete_filter(**{f"{key}__in": unique_fields})
+        await self.delete_filter(*args, **kwargs, **{f"{key}_not_in": unique_fields})
         await self.upsert(entries, key)

@@ -1,9 +1,7 @@
-
-from tortoise.models import Model
-from tortoise import fields
+from tortoise import fields, models
 
 
-class Chat(Model):
+class Chat(models.Model):
     id = fields.IntField(pk=True)
     title = fields.CharField(max_length=255, null=False)
     chat_id = fields.CharField(max_length=255, null=False)
@@ -13,7 +11,3 @@ class Chat(Model):
 
     class Meta:
         table = "chats"
-
-    class PydanticMeta:
-        max_recursion = 2
-        include=("grabbers", "title", "grabbers__from_chat_chat")

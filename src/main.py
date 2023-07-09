@@ -1,6 +1,15 @@
 from tortoise import Tortoise
 
-Tortoise.init_models(["src.models.account", "src.models.chat", "src.models.grabber_chat"], "models")
+Tortoise.init_models(
+    [
+        "src.models.account",
+        "src.models.chat",
+        "src.models.grabber_chat",
+        "src.models.spam_chat",
+        "src.models.user",
+    ],
+    "models",
+)
 
 from fastapi import FastAPI
 
@@ -11,8 +20,7 @@ from .routers.account_router import router as account_router
 # from .routers.login_router import router as login_router
 from .routers.chat_router import router as chat_router
 
-
-app = FastAPI()
+app = FastAPI(title="Telegram Chat Grabber")
 
 
 @app.exception_handler(Exception)

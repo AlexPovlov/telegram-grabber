@@ -1,20 +1,37 @@
+import datetime
 from typing import List
-from tortoise.contrib.pydantic import pydantic_model_creator
+
 from pydantic import BaseModel
+from tortoise.contrib.pydantic import pydantic_model_creator
+
 from src.models.chat import Chat
-# class Chat(BaseModel):
-#     id: int
-#     # title: str
-#     # chat_id: str
 
-#     class Config:
-#         orm_mode = True
+from .grabber_chat_schemas import GrabberChatSchema
+from .spam_chat_schemas import SpamChatSchema
 
-class ToChats(BaseModel):
+
+class ToChatsRequest(BaseModel):
     to_chats: List[int]
+    time_send: datetime.time
 
-class FromChats(BaseModel):
+
+class FromChatsRequest(BaseModel):
     from_chats: List[int]
 
 
-ChatSchema = pydantic_model_creator(Chat, allow_cycles=True)
+ChatSchema = pydantic_model_creator(
+    Chat,
+    include=(
+        "id",
+        "title",
+        "chat_id",
+    ),
+)
+
+
+class ChatFromResponse(ChatSchema):
+    grabber_chats: List[GrabberChatSchema]
+
+
+class ChatToResponse(ChatSchema):
+    spam_chats: List[SpamChatSchema]
