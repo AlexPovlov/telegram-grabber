@@ -17,3 +17,6 @@ class SpamChatService:
             raise HTTPException(status_code=404, detail="Spam not found")
         
         await self.repo.delete(spam)
+
+    async def send(self):
+        pass

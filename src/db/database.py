@@ -1,20 +1,12 @@
 from tortoise import Tortoise
 
-from src.conf import DB_CONNECTION_URI
+from src.conf import DB_CONNECTION_URI, models
 
 
 async def init_db():
     await Tortoise.init(
         db_url=DB_CONNECTION_URI,
-        modules={
-            "models": [
-                "src.models.account",
-                "src.models.chat",
-                "src.models.grabber_chat",
-                "src.models.spam_chat",
-                "src.models.user",
-            ]
-        },
+        modules={"models": models},
     )
     await Tortoise.generate_schemas()
 

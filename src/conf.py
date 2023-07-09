@@ -16,3 +16,11 @@ TELEGRAM_APP_VERSION = getenv("TELEGRAM_APP_VERSION")
 TELEGRAM_DEVICE = getenv("TELEGRAM_DEVICE")
 
 path_errors = "logs/errors.log"
+
+models = [
+    "src.models.account",
+    "src.models.chat",
+    "src.models.grabber_chat",
+    "src.models.spam_chat",
+    "src.models.user",
+]

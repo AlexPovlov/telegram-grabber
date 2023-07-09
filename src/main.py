@@ -1,13 +1,8 @@
 from tortoise import Tortoise
+from .conf import models
 
 Tortoise.init_models(
-    [
-        "src.models.account",
-        "src.models.chat",
-        "src.models.grabber_chat",
-        "src.models.spam_chat",
-        "src.models.user",
-    ],
+    models,
     "models",
 )
 
@@ -19,6 +14,7 @@ from .routers.account_router import router as account_router
 
 # from .routers.login_router import router as login_router
 from .routers.chat_router import router as chat_router
+from fastapi_utils.tasks import repeat_every
 
 app = FastAPI(title="Telegram Chat Grabber")
 
