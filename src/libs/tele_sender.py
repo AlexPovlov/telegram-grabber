@@ -1,4 +1,4 @@
-import random
+
 
 from telethon import TelegramClient, errors
 
@@ -47,15 +47,24 @@ class Sender:
         chat = await self.client.get_entity("")
         await self.client.send_message(chat, "hi")
 
-    async def mass_send(self, chat_id_from, chat_ids_to):
-        chat_from = await self.client.get_entity(int(chat_id_from))
-        posts = await self.client.get_messages(chat_from, 100)
-        random_index = random.randint(0, len(posts) - 2)
-        message = posts[random_index]
+    async def get_entity(self, chat_id):
+        return await self.client.get_entity(int(chat_id))
+    
+    async def get_messages(self, chat_from, limit = 100):
+        return await self.client.get_messages(chat_from, limit)
+    
+    async def forward_messages(self, chat_to, message):
+        return await self.client.forward_messages(chat_to, message)
 
-        for chat_id_to in chat_ids_to:
-            chat_to = await self.client.get_entity(int(chat_id_to))
-            await self.client.forward_messages(chat_to, message)
+    # async def mass_send(self, chat_id_from, chat_ids_to):
+    #     chat_from = await self.client.get_entity(int(chat_id_from))
+    #     posts = await self.client.get_messages(chat_from, 100)
+    #     random_index = random.randint(0, len(posts) - 2)
+    #     message = posts[random_index]
+
+    #     for chat_id_to in chat_ids_to:
+    #         chat_to = await self.client.get_entity(int(chat_id_to))
+    #         await self.client.forward_messages(chat_to, message)
 
     async def disconnect(self):
         await self.client.disconnect()
