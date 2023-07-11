@@ -1,5 +1,6 @@
 from tortoise import Tortoise
-from .conf import models, APP_NAME
+
+from .conf import APP_NAME, models
 
 Tortoise.init_models(
     models,
@@ -11,9 +12,9 @@ from fastapi import FastAPI
 from .db.database import close_db, init_db
 from .logger.logger import logger
 from .routers.account_router import router as account_router
-
 # from .routers.login_router import router as login_router
 from .routers.chat_router import router as chat_router
+from .tasks import tasks
 
 app = FastAPI(title=APP_NAME)
 
@@ -28,7 +29,10 @@ async def exception_handler(request, exc):
 
 @app.on_event("startup")
 async def startup():
+    # Запуск подключения к базе в tortoise orm
     await init_db()
+    # Крон
+    await tasks()
 
 
 @app.on_event("shutdown")

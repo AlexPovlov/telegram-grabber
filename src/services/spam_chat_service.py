@@ -9,13 +9,12 @@ class SpamChatService:
     def __init__(self, repo: SpamChatRepository = Depends(SpamChatRepository)):
         self.repo = repo
 
-    async def set_spam_chats(self, chat_ids: set, chat_id: int, account_id: int, time):
+    async def set_spam_chats(self, chat_ids: set, chat_id: int, time):
         await self.repo.create(
             {
                 "chat_id": chat_id,
                 "to_chats": chat_ids,
                 "time": time,
-                "account_id": account_id,
             }
         )
 
@@ -27,8 +26,11 @@ class SpamChatService:
 
         await self.repo.delete(spam)
 
+    async def spams(self):
+        return await self.repo.get_all()
+
     async def mass_send(self):
-        spams = await self.repo.get_all()
+        spams = await self.spams()
 
         for spam in spams:
             await self.send(spam.account.phone, spam.chat.chat_id, spam.to_chats)
