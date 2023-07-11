@@ -12,7 +12,7 @@ from .spam_chat_schemas import SpamChatSchema
 
 class ToChatsRequest(BaseModel):
     account_id: int
-    to_chats: List[int]
+    to_chats: List[str]
     time_send: datetime.time
 
 

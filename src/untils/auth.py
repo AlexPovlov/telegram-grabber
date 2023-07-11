@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from src.conf import ALGORITHM, SECRET_KEY
 from src.schemas.user_schemas import TokenData
 
-from ..repositories.user_repository import UserRepository
+from src.repositories.user_repository import UserRepository
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

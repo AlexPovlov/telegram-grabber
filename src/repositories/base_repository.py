@@ -70,5 +70,5 @@ class CRUDRepository:
 
     async def upsert_and_delete(self, entries: dict, key: str, *args, **kwargs):
         unique_fields = [item[key] for item in entries]
-        await self.delete_filter(*args, **kwargs, **{f"{key}_not_in": unique_fields})
+        await self.delete_filter(*args, **kwargs, **{f"{key}__not_in": unique_fields})
         await self.upsert(entries, key)

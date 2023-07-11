@@ -23,3 +23,8 @@ class ChatService:
         await self.repo.upsert_and_delete(chat_data, "chat_id", account_id=account_id)
 
         return chat_data
+
+    async def get_chat_ids(self, chat_ids, account_id):
+        chats = await self.repo.get_all(chat_id__in=chat_ids, account_id=account_id)
+        
+        return [chat.chat_id for chat in chats]

@@ -35,7 +35,10 @@ class SpamChatService:
 
     async def one_send(self, spam_id):
         spam = await self.repo.get(spam_id)
-        await self.send(spam.account.phone, spam.chat.chat_id, spam.to_chats)
+        chat = await spam.chat
+        account = await chat.account
+
+        await self.send(account.phone, chat.chat_id, spam.to_chats)
 
     async def send(self, name, from_chat, to_chats):
         async with Sender(name) as sender:

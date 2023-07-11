@@ -11,7 +11,11 @@ class AccountService:
         self.repo = repo
 
     async def get(self, account_id):
-        return await self.repo.get(account_id)
+        account = await self.repo.get(account_id)
+        if not account:
+                raise HTTPException(status_code=404, detail="Account not found")
+
+        return account
 
     async def send_code(self, phone: str):
         async with Sender(phone) as sender:
@@ -52,10 +56,7 @@ class AccountService:
         return await self.repo.get_all()
 
     async def logout(self, account_id: int):
-        account = await self.repo.get(account_id)
-
-        if not account:
-            raise HTTPException(status_code=404, detail="Account not found")
+        account = await self.get(account_id)
 
         async with Sender(account.phone) as sender:
             try:
@@ -66,10 +67,7 @@ class AccountService:
         return True
 
     async def get_all_chats(self, account_id: int):
-        account = await self.repo.get(account_id)
-
-        if not account:
-            raise HTTPException(status_code=404, detail="Account not found")
+        account = await self.get(account_id)
 
         async with Sender(account.phone) as sender:
             try:
