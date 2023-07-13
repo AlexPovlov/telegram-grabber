@@ -72,17 +72,3 @@ async def get_spam_chats(
     chat = await service.get(chat_id)
     data = await ChatToResponse.from_tortoise_orm(chat)
     return data
-
-
-@router.delete("/spam/{spam_id}", response_model=bool)
-async def delete_spam(
-    spam_id: int, service: SpamChatService = Depends(SpamChatService)
-):
-    await service.delete(spam_id)
-    return True
-
-
-@router.post("/spam/{spam_id}/test", response_model=bool)
-async def test_spam(spam_id: int, service: SpamChatService = Depends(SpamChatService)):
-    await service.one_send(spam_id)
-    return True

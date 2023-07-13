@@ -1,6 +1,6 @@
 from tortoise import Tortoise
 
-from .conf import APP_NAME, models
+from .conf import APP_NAME, APP_DEBUG, models
 
 Tortoise.init_models(
     models,
@@ -14,9 +14,13 @@ from .logger.logger import logger
 from .routers.account_router import router as account_router
 # from .routers.login_router import router as login_router
 from .routers.chat_router import router as chat_router
+from .routers.spam_chat_router import router as spam_chat_router
 from .tasks import tasks
 
-app = FastAPI(title=APP_NAME)
+app = FastAPI(
+    debug=APP_DEBUG,
+    title=APP_NAME
+    )
 
 
 @app.exception_handler(Exception)
@@ -43,3 +47,4 @@ async def shutdown():
 app.include_router(account_router)
 # app.include_router(login_router)
 app.include_router(chat_router)
+app.include_router(spam_chat_router)
