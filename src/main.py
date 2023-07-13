@@ -15,6 +15,7 @@ from .routers.account_router import router as account_router
 # from .routers.login_router import router as login_router
 from .routers.chat_router import router as chat_router
 from .routers.spam_chat_router import router as spam_chat_router
+from .routers.grabber_chat_router import router as grabber_chat_router
 from .tasks import tasks
 
 app = FastAPI(
@@ -48,3 +49,4 @@ app.include_router(account_router)
 # app.include_router(login_router)
 app.include_router(chat_router)
 app.include_router(spam_chat_router)
+app.include_router(grabber_chat_router)

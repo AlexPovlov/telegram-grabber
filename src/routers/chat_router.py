@@ -37,14 +37,6 @@ async def get_grabber_chats(
     return data
 
 
-@router.delete("/grabber/{grabber_id}", response_model=bool)
-async def delete_grabber(
-    spam_id: int, service: GrabberChatService = Depends(GrabberChatService)
-):
-    await service.delete(spam_id)
-    return True
-
-
 @router.post("/{chat_id}/spam", response_model=ChatToResponse)
 async def set_spam_chats(
     chat_id: int,
