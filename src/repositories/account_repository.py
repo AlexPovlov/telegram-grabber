@@ -1,11 +1,8 @@
 from fastapi import Depends
 
-# from src.db.database import get_db
 from src.models.account import Account
 
-
 from .base_repository import CRUDRepository
-
 
 
 class AccountRepository(CRUDRepository):

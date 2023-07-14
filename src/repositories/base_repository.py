@@ -3,8 +3,6 @@ from typing import TypeVar
 
 from tortoise.models import Model
 
-# from src.db.database import get_db
-
 # Определим обобщенный тип для моделей
 ModelType = TypeVar("ModelType")
 
