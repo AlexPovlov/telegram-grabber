@@ -2,10 +2,9 @@
     "theme_color": " #121212",
     "background_color": " #121212",
     "display": "standalone",
-    "start_url": "/auth/login",
+    "start_url": "/",
     "name": "Telegram Grabber",
     "short_name": "TGrabber",
-    "description": "",
     "icons": [
         {
             "src": "/icon-192x192.png",

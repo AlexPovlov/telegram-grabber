@@ -10,5 +10,5 @@ export function login(username: string, password: string) {
 }
 
 export function user() {
-  return axios.get<IUser>("/api/v1/users/me");
+  return axios.get<IUser>("/api/v1/users/me/");
 }
