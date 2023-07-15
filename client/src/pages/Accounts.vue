@@ -5,12 +5,15 @@ import {
   Delete,
   ChatDotSquare,
   Phone,
-  Notebook
+  Notebook,
 } from "@element-plus/icons-vue";
 import { reactive, ref } from "vue";
 import { vMaska, type MaskaDetail } from "maska";
 import { displayPhone } from "~/utils/phone";
 import type { IAccount } from "~/interfaces/IAccount";
+import * as api from "~/requests/accounts";
+import { ElMessage, ElMessageBox } from "element-plus";
+
 const phoneMask = reactive<MaskaDetail>({
   masked: "",
   unmasked: "",
@@ -21,11 +24,30 @@ const form = ref<{ phone: string }>({ phone: "" });
 const accounts = ref<IAccount[]>([]);
 const search = ref("");
 
-function addAccount() {
-  accounts.value.push({
-    phone: phoneMask.unmasked,
-  });
+getData()
+
+async function getData() {
+  let { data } = await api.all();
+  accounts.value = data;
 }
+
+async function addAccount() {
+  try {
+    const phone = phoneMask.unmasked;
+    api.sendCode(phone);
+    let code = await ElMessageBox.prompt("Введите код из СМС", "Авторизация", {
+      confirmButtonText: "Подтвердить",
+      cancelButtonText: "Отмена",
+    });
+    await api.auth(phone, code.value);
+    form.value.phone = "";
+    getData()
+  } catch (error) {
+    ElMessage.warning("Что-то пошло не так");
+    console.error(error);
+  }
+}
+
 </script>
 <template>
   <div class="index-page">
@@ -53,7 +75,9 @@ function addAccount() {
       </div>
     </el-form>
     <div class="accounts-list" v-if="accounts.length">
-      <h3><el-icon><Notebook /></el-icon> Список добвленных</h3>
+      <h3>
+        <el-icon><Notebook /></el-icon> Список добвленных
+      </h3>
       <div class="row">
         <div class="col-12 col-md-6 col-lg-4">
           <el-input
