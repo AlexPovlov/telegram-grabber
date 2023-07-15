@@ -7,18 +7,10 @@ import {
   Phone,
   Notebook,
 } from "@element-plus/icons-vue";
-import { reactive, ref } from "vue";
-import { vMaska, type MaskaDetail } from "maska";
-import { displayPhone } from "~/utils/phone";
+import { ref } from "vue";
 import type { IAccount } from "~/interfaces/IAccount";
 import * as api from "~/requests/accounts";
 import { ElMessage, ElMessageBox } from "element-plus";
-
-const phoneMask = reactive<MaskaDetail>({
-  masked: "",
-  unmasked: "",
-  completed: false,
-});
 
 const form = ref<{ phone: string }>({ phone: "" });
 const accounts = ref<IAccount[]>([]);
@@ -32,14 +24,17 @@ async function getData() {
 }
 
 async function addAccount() {
-  const phone = phoneMask.unmasked;
-  api.sendCode(phone);
-  let code = await ElMessageBox.prompt("Введите код из СМС", "Авторизация", {
+  api.sendCode(form.value.phone);
+  const tfa = await ElMessageBox.prompt("TFA (необязательно)", "Авторизация", {
+    confirmButtonText: "Продолжить",
+    cancelButtonText: "Отмена",
+  });
+  const code = await ElMessageBox.prompt("Введите код из СМС", "Авторизация", {
     confirmButtonText: "Подтвердить",
     cancelButtonText: "Отмена",
   });
   try {
-    await api.auth(phone, code.value);
+    await api.auth(form.value.phone, code.value, tfa.value || "");
     getData();
     form.value.phone = "";
   } catch (error) {
@@ -61,13 +56,11 @@ async function addAccount() {
             <div class="d-flex">
               <el-input
                 class="mr-2"
-                v-maska="phoneMask"
-                data-maska="+# (###) ### ## ##"
                 placeholder="Номер телефона"
                 v-model="form.phone"
               >
               </el-input>
-              <el-button :disabled="!phoneMask.completed" type="primary" :icon="Plus" @click="addAccount" />
+              <el-button type="primary" :icon="Plus" @click="addAccount" :disabled="!form.phone" />
             </div>
           </el-form-item>
         </div>
@@ -81,7 +74,6 @@ async function addAccount() {
         <div class="col-12 col-md-6 col-lg-4">
           <el-input
             v-maska
-            data-maska="+# (###) ### ## ##"
             class="mb-4"
             placeholder="Поиск..."
             v-model="search"
@@ -93,7 +85,7 @@ async function addAccount() {
         <template v-for="item in accounts">
           <div
             class="col-12 col-md-6 col-lg-4 mb-4"
-            v-if="displayPhone(item.phone).includes(search)"
+            v-if="item.phone.includes(search)"
           >
             <el-card>
               <template #header>
@@ -109,7 +101,7 @@ async function addAccount() {
                 </div>
               </template>
               <div style="font-size: 14px">
-                <el-icon><Phone /></el-icon> {{ displayPhone(item.phone) }}
+                <el-icon><Phone /></el-icon> {{ item.phone }}
               </div>
             </el-card>
           </div>
