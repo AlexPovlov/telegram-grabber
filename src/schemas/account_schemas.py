@@ -22,6 +22,7 @@ class AccountResponse(BaseModel):
     id: int
     name: Optional[str]
     phone: str
+    auth: bool
 
     class Config:
         orm_mode = True

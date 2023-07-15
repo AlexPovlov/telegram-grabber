@@ -13,7 +13,7 @@ class AccountService:
     async def get(self, account_id):
         account = await self.repo.get(account_id)
         if not account:
-                raise HTTPException(status_code=404, detail="Account not found")
+            raise HTTPException(status_code=404, detail="Account not found")
 
         return account
 
@@ -23,7 +23,9 @@ class AccountService:
                 account = await self.repo.get_from_number(phone)
                 if not account:
                     response = await sender.send_code(phone)
-                    await self.repo.create({"phone_hash": response.phone_code_hash})
+                    await self.repo.create(
+                        {"phone": phone, "phone_hash": response.phone_code_hash}
+                    )
                 elif not account.auth:
                     response = await sender.send_code(phone)
                     await self.repo.update(
