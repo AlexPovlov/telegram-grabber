@@ -13,10 +13,5 @@ class AccountRepository(CRUDRepository):
         super().__init__(model)
 
     async def get_from_number(self, phone):
+        print(phone)
         return await self.model.filter(phone=phone).first()
-
-    async def create_many_chats(self, chats, account):
-
-
-
-        return chat_data

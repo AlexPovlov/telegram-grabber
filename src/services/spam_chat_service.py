@@ -9,14 +9,10 @@ class SpamChatService:
     def __init__(self, repo: SpamChatRepository = Depends(SpamChatRepository)):
         self.repo = repo
 
-    async def set_spam_chats(self, chat_ids: set, chat_id: int, time):
-        await self.repo.create(
-            {
-                "chat_id": chat_id,
-                "to_chats": chat_ids,
-                "time": time,
-            }
-        )
+    async def set_spam_chats(self, chats: set, chat_id: int, time):
+        spam_chat = await self.repo.create({"chat_id": chat_id, "time": time})
+        for chat in chats:
+            await spam_chat.to_chats.add(chat)
 
     async def delete(self, spam_id):
         spam = await self.repo.get(spam_id)
@@ -39,8 +35,8 @@ class SpamChatService:
         spam = await self.repo.get(spam_id)
         chat = await spam.chat
         account = await chat.account
-
-        await self.send(account.phone, chat.chat_id, spam.to_chats)
+        to_chats = await spam.to_chats
+        await self.send(account.phone, chat.chat_id, to_chats)
 
     async def send(self, name, from_chat, to_chats):
         async with Sender(name) as sender:
@@ -49,6 +45,6 @@ class SpamChatService:
             random_index = random.randint(0, len(posts) - 2)
             message = posts[random_index]
 
-            for chat_id_to in to_chats:
-                chat_to = await sender.get_entity(int(chat_id_to))
+            for chat in to_chats:
+                chat_to = await sender.get_entity(int(chat.chat_id))
                 await sender.forward_messages(chat_to, message)

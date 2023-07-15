@@ -13,7 +13,8 @@ async def mass_send():
         if schedule.time.strftime("%H:%M") == datetime.now().strftime("%H:%M"):
             chat = await schedule.chat
             account = await chat.account
-            await service.send(account.phone, chat.chat_id, schedule.to_chats)
+            to_chats = await schedule.to_chats
+            await service.send(account.phone, chat.chat_id, to_chats)
 
 
 async def tasks():

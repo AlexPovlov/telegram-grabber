@@ -53,10 +53,10 @@ async def set_spam_chats(
 ):
     chat = await service.get(chat_id)
 
-    to_chats = await service.get_chat_ids(chats.to_chats)
+    to_chats = await service.get_chat_ids(chat.account_id, chats.to_chats)
 
     if len(to_chats):
-        await spam_service.set_spam_chats(list(to_chats), chat.id, chats.time_send)
+        await spam_service.set_spam_chats(to_chats, chat.id, chats.time_send)
 
     data = await ChatToResponse.from_tortoise_orm(chat)
 

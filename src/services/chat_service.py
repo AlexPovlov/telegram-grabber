@@ -24,7 +24,5 @@ class ChatService:
 
         return chat_data
 
-    async def get_chat_ids(self, chat_ids):
-        chats = await self.repo.get_all(chat_id__in=chat_ids)
-        
-        return {chat.chat_id for chat in chats}
+    async def get_chat_ids(self, account_id, ids):
+        return await self.repo.get_all(account_id=account_id, id__in=ids)
