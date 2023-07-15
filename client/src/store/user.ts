@@ -39,7 +39,7 @@ export const useUserStore = defineStore("userStore", () => {
   }
 
   function isAuthorized() {
-    return true;
+    return !!localStorage.getItem("Authorization");
   }
 
   return {

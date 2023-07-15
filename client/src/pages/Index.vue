@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { Postcard } from "@element-plus/icons-vue";
+</script>
 <template>
-    <h1>Index</h1>
+  <div class="index-page">
+    <h3>
+      <el-icon><Postcard /></el-icon> Аккаунты
+    </h3>
+  </div>
 </template>
