@@ -1,48 +1,44 @@
-version: '3'
+version: "3"
 
 services:
-    nginx:
-        restart: always
-        image: nginx:latest
-        expose:
-          - 8080
-        ports:
-          - "80:8080"
-        volumes:
-            - ./_docker/nginx:/etc/nginx/conf.d
-        depends_on:
-            - app
+  nginx:
+    restart: always
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./_docker/nginx:/etc/nginx/conf.d
+      - ./logs:/www/telegram/logs
+    depends_on:
+      - app
 
-    python: &base_app
-        # restart: always
-        build:
-            context: .
-            dockerfile: _docker/python/Dockerfile
-        volumes:
-            - ./:/www/telegram
+  python: &base_app # restart: always
+    build:
+      context: .
+      dockerfile: _docker/python/Dockerfile
+    volumes:
+      - ./:/www/telegram
 
-        depends_on:
-            - postgres
+    depends_on:
+      - postgres
 
-    app:
-        <<: *base_app
-        restart: always
-        command: "uvicorn src.main:app"
-        depends_on:
-            - python
+  app:
+    <<: *base_app
+    restart: always
+    command: "uvicorn src.main:app --host 0.0.0.0 --port 8000"
+    depends_on:
+      - python
 
-    postgres:
-        image: postgres:alpine
-        ports:
-            - 5432:5432
-        environment:
-            POSTGRES_USER: ${DB_USER}
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
-            POSTGRES_DB: ${DB_NAME}
-            PGDATA: /var/lib/postgresql/data
-        volumes:
-            - pgdata:/var/lib/postgresql/data
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - telegrampgdata:/var/lib/postgresql/data
 
 volumes:
-    pgdata:
-        external: true
+  telegrampgdata:
+    external: true
