@@ -37,14 +37,6 @@ async def get_grabber_chats(
     return data
 
 
-@router.delete("/grabber/{grabber_id}", response_model=bool)
-async def delete_grabber(
-    spam_id: int, service: GrabberChatService = Depends(GrabberChatService)
-):
-    await service.delete(spam_id)
-    return True
-
-
 @router.post("/{chat_id}/spam", response_model=ChatToResponse)
 async def set_spam_chats(
     chat_id: int,
@@ -72,17 +64,3 @@ async def get_spam_chats(
     chat = await service.get(chat_id)
     data = await ChatToResponse.from_tortoise_orm(chat)
     return data
-
-
-@router.delete("/spam/{spam_id}", response_model=bool)
-async def delete_spam(
-    spam_id: int, service: SpamChatService = Depends(SpamChatService)
-):
-    await service.delete(spam_id)
-    return True
-
-
-@router.post("/spam/{spam_id}/test", response_model=bool)
-async def test_spam(spam_id: int, service: SpamChatService = Depends(SpamChatService)):
-    await service.one_send(spam_id)
-    return True

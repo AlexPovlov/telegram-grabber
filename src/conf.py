@@ -5,9 +5,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 APP_NAME=getenv("APP_NAME")
+APP_DEBUG=getenv("APP_DEBUG")
 
-REDIS_CONNECTION=getenv("REDIS_CONNECTION")
-DB_CONNECTION_URI = getenv("DB_CONNECTION_URI")
+DB_HOST=getenv("DB_HOST")
+DB_USER=getenv("DB_USER")
+DB_PASSWORD=getenv("DB_PASSWORD")
+DB_NAME=getenv("DB_NAME")
 
 SECRET_KEY = getenv("SECRET_KEY")
 ALGORITHM = getenv("ALGORITHM")
