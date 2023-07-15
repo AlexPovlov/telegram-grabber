@@ -6,7 +6,7 @@ import Navigation from "~/components/Navigation.vue";
   <div class="app-layout">
     <navigation />
     <div class="container">
-      <h1>Telegram Grabber</h1>
+      <h2>Telegram Grabber</h2>
       <router-view />
     </div>
   </div>

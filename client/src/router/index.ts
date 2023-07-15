@@ -36,7 +36,7 @@ const router = createRouter({
         {
           path: "",
           // @ts-ignore
-          component: () => import("~/pages/Index.vue"),
+          component: () => import("~/pages/Accounts.vue"),
         },
       ],
     },

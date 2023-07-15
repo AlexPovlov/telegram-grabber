@@ -18,7 +18,7 @@ const loadingTimeout = 400;
 const items = [
   {
     index: '1',
-    name: 'Главная',
+    name: 'Аккаунты',
     path: '/',
   }
 ];
