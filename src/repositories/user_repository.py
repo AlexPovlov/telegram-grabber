@@ -13,4 +13,4 @@ class UserRepository(CRUDRepository):
         super().__init__(model)
 
     async def get_from_username(self, username):
-        return await self.model.filter(username == username).first()
+        return await self.model.filter(username=username).first()
