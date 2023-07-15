@@ -24,7 +24,7 @@ const form = ref<{ phone: string }>({ phone: "" });
 const accounts = ref<IAccount[]>([]);
 const search = ref("");
 
-getData()
+getData();
 
 async function getData() {
   let { data } = await api.all();
@@ -32,22 +32,21 @@ async function getData() {
 }
 
 async function addAccount() {
+  const phone = phoneMask.unmasked;
+  api.sendCode(phone);
+  let code = await ElMessageBox.prompt("Введите код из СМС", "Авторизация", {
+    confirmButtonText: "Подтвердить",
+    cancelButtonText: "Отмена",
+  });
   try {
-    const phone = phoneMask.unmasked;
-    api.sendCode(phone);
-    let code = await ElMessageBox.prompt("Введите код из СМС", "Авторизация", {
-      confirmButtonText: "Подтвердить",
-      cancelButtonText: "Отмена",
-    });
     await api.auth(phone, code.value);
+    getData();
     form.value.phone = "";
-    getData()
   } catch (error) {
     ElMessage.warning("Что-то пошло не так");
     console.error(error);
   }
 }
-
 </script>
 <template>
   <div class="index-page">
