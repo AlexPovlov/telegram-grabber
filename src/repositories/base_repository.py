@@ -34,8 +34,9 @@ class CRUDRepository:
     async def delete_filter(self, *args, **kwargs):
         await self.model.filter(*args, **kwargs).delete()
 
-    async def first_or_create(self, item_search: dict, item_data: dict) -> ModelType:
-        return await self.model.update_or_create(item_data, **item_search)
+    async def first_or_create(self, item_search: dict, item_data: dict):
+        data = await self.model.update_or_create(item_data, **item_search)
+        return data[0]
 
     async def upsert(self, data: dict, key: str, *args, **kwargs):
         unique_fields = [item[key] for item in data]
