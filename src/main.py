@@ -1,6 +1,6 @@
 from tortoise import Tortoise
 
-from .conf import APP_NAME, APP_DEBUG, models
+from .conf import APP_NAME, APP_DEBUG, ORIGIN_DOMAINS, models
 
 Tortoise.init_models(
     models,
@@ -8,6 +8,7 @@ Tortoise.init_models(
 )
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .db.database import close_db, init_db
 from .logger.logger import logger
@@ -19,6 +20,14 @@ from .routers.grabber_chat_router import router as grabber_chat_router
 from .tasks import tasks
 
 app = FastAPI(debug=APP_DEBUG, title=APP_NAME)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGIN_DOMAINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.exception_handler(Exception)
