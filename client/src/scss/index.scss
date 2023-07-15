@@ -1,0 +1,60 @@
+@use "element-plus/theme-chalk/src/dark/css-vars.scss" as *;
+@import url("https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+@import "grid";
+@import "functions";
+@import "pages";
+@import "components";
+
+html {
+  font-family: "Victor Mono", monospace;
+  background-color: getCssVar("bg-color");
+  overflow-y: scroll;
+  color: getCssVar("text-color", "regular");
+}
+body {
+  margin: 0;
+}
+
+.el-menu-item {
+  border-bottom: none !important;
+  background-color: transparent !important;
+  a {
+    text-decoration: none;
+  }
+}
+
+.el-text {
+  word-break: normal !important;
+}
+
+.el-scrollbar__bar {
+  opacity: 1 !important;
+}
+
+.el-scrollbar {
+  > .el-scrollbar__bar {
+    opacity: 1;
+  }
+}
+
+.is-active {
+  border-bottom: none !important;
+}
+
+.route-name {
+  padding: 10px 7px;
+}
+
+.router-link-active {
+  background-color: transparent !important;
+  border-bottom: none !important;
+  .route-name {
+    background-color: getCssVar("menu", "hover-bg-color");
+    color: getCssVar("menu", "active-color") !important;
+    border-radius: 10px;
+  }
+}
+
+a {
+  color: inherit !important;
+}

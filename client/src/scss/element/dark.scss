@@ -1,0 +1,19 @@
+// only scss variables
+
+$--colors: (
+    // 'success': (
+    //   'base': #589ef8,
+    // ),
+    // 'info': (
+    //   'base': #39a1c0,
+    // ),
+);
+
+@forward 'element-plus/theme-chalk/src/dark/var.scss' with (
+  $colors: $--colors,
+  $bg-color: (
+    'page': #0a0a0a,
+    '': #121212,
+    'overlay': #1d1e1f,
+  )
+);
