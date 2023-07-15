@@ -18,10 +18,7 @@ from .routers.spam_chat_router import router as spam_chat_router
 from .routers.grabber_chat_router import router as grabber_chat_router
 from .tasks import tasks
 
-app = FastAPI(
-    debug=APP_DEBUG,
-    title=APP_NAME
-    )
+app = FastAPI(debug=APP_DEBUG, title=APP_NAME, root_path="/api/v1")
 
 
 @app.exception_handler(Exception)
