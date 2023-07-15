@@ -67,7 +67,7 @@ async function addAccount() {
                 v-model="form.phone"
               >
               </el-input>
-              <el-button type="primary" :icon="Plus" @click="addAccount" />
+              <el-button :disabled="!phoneMask.completed" type="primary" :icon="Plus" @click="addAccount" />
             </div>
           </el-form-item>
         </div>
