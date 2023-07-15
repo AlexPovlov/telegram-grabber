@@ -7,7 +7,7 @@ load_dotenv()
 APP_NAME=getenv("APP_NAME")
 APP_DEBUG=getenv("APP_DEBUG")
 APP_URL=getenv("APP_URL")
-ORIGIN_DOMAINS=getenv("APORIGIN_DOMAINSP_DEBUG").split(',')
+ORIGIN_DOMAINS=getenv("ORIGIN_DOMAINS").split(',')
 
 DB_HOST=getenv("DB_HOST")
 DB_USER=getenv("DB_USER")
