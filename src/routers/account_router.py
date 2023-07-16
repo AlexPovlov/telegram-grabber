@@ -1,17 +1,17 @@
+import asyncio
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends
 
 from src.schemas.account_schemas import (
     AccountResponse,
+    AccountSingleResponse,
     AuthRequest,
     CodeRequest,
-    AccountSingleResponse,
 )
 from src.services.account_service import AccountService
 from src.services.chat_service import ChatService
 from src.untils.auth import oauth2_scheme
-
 
 router = APIRouter(prefix="/account", tags=["Account"])
 
@@ -22,7 +22,7 @@ async def send_code(
     account: CodeRequest,
     service: AccountService = Depends(AccountService),
 ):
-    await service.send_code(account.phone)
+    asyncio.create_task(service.send_code(account.phone))
     return True
 
 
@@ -32,7 +32,7 @@ async def auth(
     account: AuthRequest,
     service: AccountService = Depends(AccountService),
 ):
-    await service.auth(account.phone, account.code, account.tfa)
+    asyncio.create_task(service.auth(account.phone, account.code, account.tfa))
     return True
 
 
@@ -50,7 +50,7 @@ async def logout(
     account_id: int,
     service: AccountService = Depends(AccountService),
 ):
-    await service.logout(account_id)
+    asyncio.create_task(service.logout(account_id))
     return True
 
 

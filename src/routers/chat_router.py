@@ -2,18 +2,12 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from src.schemas.chat_schemas import (
-    ChatFromResponse,
-    ChatToResponse,
-    FromChatsRequest,
-    ToChatsRequest,
-)
-
+from src.schemas.chat_schemas import (ChatFromResponse, ChatToResponse,
+                                      FromChatsRequest, ToChatsRequest)
 from src.services.chat_service import ChatService
 from src.services.grabber_chat_service import GrabberChatService
 from src.services.spam_chat_service import SpamChatService
 from src.untils.auth import oauth2_scheme
-
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 

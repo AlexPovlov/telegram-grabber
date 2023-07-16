@@ -1,3 +1,4 @@
+import asyncio
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -14,7 +15,7 @@ async def delete_spam(
     spam_id: int,
     service: SpamChatService = Depends(SpamChatService),
 ):
-    await service.delete(spam_id)
+    asyncio.create_task(service.delete(spam_id))
     return True
 
 
@@ -24,5 +25,5 @@ async def test_spam(
     spam_id: int,
     service: SpamChatService = Depends(SpamChatService),
 ):
-    await service.one_send(spam_id)
+    asyncio.create_task(service.one_send(spam_id))
     return True
