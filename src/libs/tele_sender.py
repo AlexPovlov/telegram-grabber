@@ -38,10 +38,10 @@ class Sender:
         except Exception as e:
             raise e
 
-    async def get_chats(self):
+    async def get_chats(self, limit = 100):
         # dialogs = await self.client.get_dialogs(limit=10)
         # # print(dialogs)
-        return await self.client.get_dialogs()
+        return await self.client.get_dialogs(limit)
 
     async def send(self):
         chat = await self.client.get_entity("")
