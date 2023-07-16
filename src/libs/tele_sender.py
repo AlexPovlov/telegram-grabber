@@ -1,5 +1,3 @@
-
-
 from telethon import TelegramClient, errors
 
 from src.conf import (
@@ -38,10 +36,10 @@ class Sender:
         except Exception as e:
             raise e
 
-    async def get_chats(self, limit = 100):
+    async def get_chats(self, limit=10):
         # dialogs = await self.client.get_dialogs(limit=10)
         # # print(dialogs)
-        return await self.client.get_dialogs(limit)
+        return await self.client.get_dialogs(limit=limit)
 
     async def send(self):
         chat = await self.client.get_entity("")
@@ -49,10 +47,10 @@ class Sender:
 
     async def get_entity(self, chat_id):
         return await self.client.get_entity(int(chat_id))
-    
-    async def get_messages(self, chat_from, limit = 100):
-        return await self.client.get_messages(chat_from, limit)
-    
+
+    async def get_messages(self, chat_from, limit=10):
+        return await self.client.get_messages(chat_from, limit=limit)
+
     async def forward_messages(self, chat_to, message):
         return await self.client.forward_messages(chat_to, message)
 
