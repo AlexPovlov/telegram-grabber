@@ -3,15 +3,19 @@ import {
   Postcard,
   Plus,
   Delete,
-  ChatDotSquare,
+  View,
   Phone,
   Notebook,
+  CircleCheckFilled,
+  WarningFilled,
 } from "@element-plus/icons-vue";
 import { ref } from "vue";
 import type { IAccount } from "~/interfaces/IAccount";
 import * as api from "~/requests/accounts";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const form = ref<{ phone: string }>({ phone: "" });
 const accounts = ref<IAccount[]>([]);
 const search = ref("");
@@ -23,10 +27,28 @@ async function getData() {
   accounts.value = data;
 }
 
+async function deleteAccount(id?: number) {
+  if (id) {
+    await ElMessageBox.confirm("Удалить аккаунт?", "Внимание", {
+      confirmButtonText: "Подтвердить",
+      cancelButtonText: "Отмена",
+      type: "error",
+    });
+    try {
+      await api.logout(id);
+      getData();
+      ElMessage.success("Аккаунт успешно удален");
+    } catch (error) {
+      ElMessage.warning("Что-то пошло не так");
+      console.error(error);
+    }
+  }
+}
+
 async function addAccount() {
   api.sendCode(form.value.phone);
   const tfa = await ElMessageBox.prompt("TFA (необязательно)", "Авторизация", {
-    confirmButtonText: "Продолжить",
+    confirmButtonText: "Далее",
     cancelButtonText: "Отмена",
   });
   const code = await ElMessageBox.prompt("Введите код из СМС", "Авторизация", {
@@ -35,6 +57,7 @@ async function addAccount() {
   });
   try {
     await api.auth(form.value.phone, code.value, tfa.value || "");
+    ElMessage.success("Аккаунт успешно добавлен");
     getData();
     form.value.phone = "";
   } catch (error) {
@@ -49,7 +72,6 @@ async function addAccount() {
       <el-icon><Postcard /></el-icon> Аккаунты
     </h3>
     <el-form label-position="top">
-      <p></p>
       <div class="row">
         <div class="col-12 col-md-4">
           <el-form-item label="Добавить аккаунт">
@@ -60,7 +82,12 @@ async function addAccount() {
                 v-model="form.phone"
               >
               </el-input>
-              <el-button type="primary" :icon="Plus" @click="addAccount" :disabled="!form.phone" />
+              <el-button
+                type="primary"
+                :icon="Plus"
+                @click="addAccount"
+                :disabled="!form.phone"
+              />
             </div>
           </el-form-item>
         </div>
@@ -72,12 +99,7 @@ async function addAccount() {
       </h3>
       <div class="row">
         <div class="col-12 col-md-6 col-lg-4">
-          <el-input
-            v-maska
-            class="mb-4"
-            placeholder="Поиск..."
-            v-model="search"
-          >
+          <el-input class="mb-4" placeholder="Поиск..." v-model="search">
           </el-input>
         </div>
       </div>
@@ -87,21 +109,49 @@ async function addAccount() {
             class="col-12 col-md-6 col-lg-4 mb-4"
             v-if="item.phone.includes(search)"
           >
-            <el-card>
+            <el-card class="accounts-list__item">
               <template #header>
                 <div class="d-flex justify-content-between">
-                  <el-button size="small" :icon="ChatDotSquare" type="success">
-                    Список чатов
+                  <el-button
+                    @click="router.push(`/detail/${item.id}`)"
+                    size="small"
+                    :icon="View"
+                    type="success"
+                  >
+                    Простотр
                   </el-button>
                   <el-button
                     size="small"
                     type="warning"
                     :icon="Delete"
+                    @click="deleteAccount(item.id)"
                   ></el-button>
                 </div>
               </template>
-              <div style="font-size: 14px">
-                <el-icon><Phone /></el-icon> {{ item.phone }}
+
+              <div class="accounts-list__item-info">
+                <el-tooltip
+                  v-if="item.auth"
+                  content="Авторизовано"
+                  placement="top"
+                >
+                  <el-icon class="accounts-list__item-info-status success">
+                    <CircleCheckFilled />
+                  </el-icon>
+                </el-tooltip>
+
+                <el-tooltip v-else content="Не авторизовано" placement="top">
+                  <el-icon class="accounts-list__item-info-status warning">
+                    <WarningFilled />
+                  </el-icon>
+                </el-tooltip>
+
+                <div class="accounts-list__item-info-phone">
+                  <el-icon class="accounts-list__item-info-phone-icon">
+                    <Phone />
+                  </el-icon>
+                  {{ item.phone }}
+                </div>
               </div>
             </el-card>
           </div>

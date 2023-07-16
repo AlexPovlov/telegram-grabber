@@ -36,7 +36,12 @@ const router = createRouter({
         {
           path: "",
           // @ts-ignore
-          component: () => import("~/pages/Accounts.vue"),
+          component: () => import("~/pages/Accounts/List.vue"),
+        },
+        {
+          path: "detail/:account_id",
+          // @ts-ignore
+          component: () => import("~/pages/Accounts/Detail.vue"),
         },
       ],
     },

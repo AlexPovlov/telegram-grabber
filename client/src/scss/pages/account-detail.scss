@@ -1,0 +1,10 @@
+.account-detail {
+  &__title {
+    &-phone {
+      padding: 5px 8px;
+      border: 1px solid getCssVar("border-color", "light");
+      border-radius: getCssVar("border-radius", "base");
+      margin-left: 10px;
+    }
+  }
+}

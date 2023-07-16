@@ -4,5 +4,6 @@ export interface IAccount {
   id?: number;
   name?: string;
   phone: string;
+  auth: boolean;
   chats?: IChat[];
 }

@@ -12,3 +12,11 @@ export function auth(phone: string, code: string, tfa: string) {
 export function all() {
   return axios.get<IAccount[]>("/api/v1/account/all");
 }
+
+export function chats(id: number) {
+  return axios.get<IAccount>(`/api/v1/account/${id}/chats`);
+}
+
+export function logout(id: number) {
+  return axios.delete<boolean>(`/api/v1/account/${id}/logout`);
+}

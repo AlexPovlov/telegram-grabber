@@ -1,0 +1,23 @@
+.accounts-list {
+  &__item {
+    &-info {
+      display: flex;
+      align-items: center;
+      &-status {
+        &.success {
+          color: getCssVar("color-success");
+        }
+        &.warning {
+          color: getCssVar("color-warning");
+        }
+      }
+      &-phone {
+        display: flex;
+        align-items: center;
+        &-icon {
+          margin: 0 5px 0 10px;
+        }
+      }
+    }
+  }
+}
