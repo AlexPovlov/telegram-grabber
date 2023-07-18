@@ -113,12 +113,12 @@ const isValidate = computed(() => form.value.time_send && form.value.to_chats);
     >
       Аккаунт - {{ account?.phone }}
     </el-button>
-    <h3 class="account-detail__title">
+    <h3 class="page-title__title">
       <el-icon>
         <el-icon class="mr-1"><ChatLineSquare /></el-icon>
       </el-icon>
       Спамлист
-      <span class="account-detail__title-phone">{{ chat?.title }}</span>
+      <span class="page-title__title-info">{{ chat?.title }}</span>
     </h3>
     <h4>Добавить</h4>
     <el-form label-position="top">
@@ -157,11 +157,11 @@ const isValidate = computed(() => form.value.time_send && form.value.to_chats);
       </div>
     </el-form>
     <div
-      class="spam-chats__list"
+      class="common-list__list"
       v-if="chat.spam_chats && chat.spam_chats.length"
     >
       <h3>Добавленные</h3>
-      <div class="spam-chats__list">
+      <div class="common-list__list">
         <div class="row">
           <div class="col-12 col-lg-6 mb-4" v-for="item in chat.spam_chats">
             <el-card class="chat-list__item" style="height: 100%">

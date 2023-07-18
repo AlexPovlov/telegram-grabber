@@ -98,7 +98,7 @@ async function addAccount() {
         </div>
       </div>
     </el-form>
-    <div class="accounts-list" v-if="accounts.length">
+    <div class="common-list" v-if="accounts.length">
       <h3>
         <el-icon><Notebook /></el-icon> Список добвленных
       </h3>
@@ -114,7 +114,7 @@ async function addAccount() {
             class="col-12 col-md-6 col-lg-4 mb-4"
             v-if="item.phone.includes(search)"
           >
-            <el-card class="accounts-list__item">
+            <el-card class="common-list__item">
               <template #header>
                 <div class="d-flex">
                   <el-button
@@ -134,25 +134,25 @@ async function addAccount() {
                 </div>
               </template>
 
-              <div class="accounts-list__item-info">
+              <div class="common-list__item-info">
                 <el-tooltip
                   v-if="item.auth"
                   content="Авторизовано"
                   placement="top"
                 >
-                  <el-icon class="accounts-list__item-info-status success">
+                  <el-icon class="common-list__item-info-status success">
                     <CircleCheckFilled />
                   </el-icon>
                 </el-tooltip>
 
                 <el-tooltip v-else content="Не авторизовано" placement="top">
-                  <el-icon class="accounts-list__item-info-status warning">
+                  <el-icon class="common-list__item-info-status warning">
                     <WarningFilled />
                   </el-icon>
                 </el-tooltip>
 
-                <div class="accounts-list__item-info-phone">
-                  <el-icon class="accounts-list__item-info-phone-icon">
+                <div class="common-list__item-info-phone">
+                  <el-icon class="common-list__item-info-phone-icon">
                     <Phone />
                   </el-icon>
                   {{ item.phone }}

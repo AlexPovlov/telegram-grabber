@@ -1,6 +1,6 @@
-.account-detail {
+.page-title {
   &__title {
-    &-phone {
+    &-info {
       padding: 5px 8px;
       border: 1px solid getCssVar("border-color", "light");
       border-radius: getCssVar("border-radius", "base");

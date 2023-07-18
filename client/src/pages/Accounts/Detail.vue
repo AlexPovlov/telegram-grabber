@@ -35,12 +35,12 @@ async function getData() {
     >
       Аккаунты
     </el-button>
-    <h3 class="account-detail__title">
+    <h3 class="page-title__title">
       <el-icon><User /></el-icon> Аккаунт
-      <span class="account-detail__title-phone">{{ account?.phone }}</span>
+      <span class="page-title__title-info">{{ account?.phone }}</span>
     </h3>
-    <div class="chat-list" v-if="account.chats">
-      <h3 class="chat-list__title">Чаты</h3>
+    <div class="common-list" v-if="account.chats">
+      <h3 class="common-list__title">Чаты</h3>
       <div class="row">
         <div class="col-12 col-md-6 col-lg-4">
           <el-input class="mb-4" placeholder="Поиск..." v-model="search">
@@ -50,7 +50,7 @@ async function getData() {
       <div class="row">
         <template v-for="item in account.chats">
           <div class="col-12 col-lg-6 mb-4" v-if="item.title.includes(search)">
-            <el-card class="chat-list__item" style="height: 100%">
+            <el-card class="common-list__item" style="height: 100%">
               <template #header>
                 <div>
                   <el-button
@@ -63,11 +63,11 @@ async function getData() {
                   </el-button>
                 </div>
               </template>
-              <el-text class="chat-list__item-id d-block mb-2">
+              <el-text class="common-list__item-id d-block mb-2">
                 <el-text type="primary">ID: </el-text>
                 {{ item.chat_id }}
               </el-text>
-              <el-text class="chat-list__item-title d-block">
+              <el-text class="common-list__item-title d-block">
                 <el-text type="primary">Название: </el-text>
                 {{ item.title }}
               </el-text>
