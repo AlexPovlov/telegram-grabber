@@ -45,7 +45,11 @@ async function getData() {
           <el-card class="chat-list__item" style="height: 100%">
             <template #header>
               <div>
-                <el-button type="primary" size="small">
+                <el-button
+                  type="primary"
+                  size="small"
+                  @click="router.push(`/spam-chats/${account.id}/${item.id}`)"
+                >
                   <el-icon class="mr-1"><ChatLineSquare /></el-icon>
                   Спамлист
                 </el-button>
