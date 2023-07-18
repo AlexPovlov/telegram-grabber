@@ -14,6 +14,7 @@ import type { IAccount } from "~/interfaces/IAccount";
 import * as api from "~/requests/accounts";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
+import { useProgress } from "~/composables/useProgress";
 
 const router = useRouter();
 const form = ref<{ phone: string }>({ phone: "" });
@@ -23,8 +24,12 @@ const search = ref("");
 getData();
 
 async function getData() {
+  const progress = useProgress();
+  progress.emitStart();
   let { data } = await api.all();
-  accounts.value = data;
+  progress.emitEnd(async () => {
+    accounts.value = data;
+  });
 }
 
 async function deleteAccount(id?: number) {
@@ -36,7 +41,7 @@ async function deleteAccount(id?: number) {
     });
     try {
       await api.logout(id);
-      getData();
+      setTimeout(getData, 1000);
       ElMessage.success("Аккаунт успешно удален");
     } catch (error) {
       ElMessage.warning("Что-то пошло не так");
@@ -111,12 +116,12 @@ async function addAccount() {
           >
             <el-card class="accounts-list__item">
               <template #header>
-                <div class="d-flex justify-content-between">
+                <div class="d-flex">
                   <el-button
                     @click="router.push(`/detail/${item.id}`)"
                     size="small"
                     :icon="View"
-                    type="success"
+                    type="primary"
                   >
                     Простотр
                   </el-button>
