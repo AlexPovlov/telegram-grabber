@@ -163,5 +163,6 @@ async function addAccount() {
         </template>
       </div>
     </div>
+    <el-empty v-else description="Нет добавленных" />
   </div>
 </template>

@@ -49,6 +49,7 @@ async function addSpam() {
     });
     clearForm();
     getData();
+    ElMessage.success("Спам успешно добавлен");
   }
 }
 
@@ -60,9 +61,11 @@ async function testSpam(id: number) {
   });
   progress.emitStart();
   await apiSpam.testSpam(id);
-  progress.emitEnd(() => {});
-}
+  progress.emitEnd(() => {
+    ElMessage.success("Рассылка успешно запущена");
 
+  });
+}
 
 async function deleteSpam(id: number) {
   if (id) {
@@ -117,6 +120,7 @@ const isValidate = computed(() => form.value.time_send && form.value.to_chats);
       Спамлист
       <span class="account-detail__title-phone">{{ chat?.title }}</span>
     </h3>
+    <h4>Добавить</h4>
     <el-form label-position="top">
       <div class="row">
         <div class="col-12 col-md-8">
@@ -152,7 +156,10 @@ const isValidate = computed(() => form.value.time_send && form.value.to_chats);
         </div>
       </div>
     </el-form>
-    <div class="spam-chats__list">
+    <div
+      class="spam-chats__list"
+      v-if="chat.spam_chats && chat.spam_chats.length"
+    >
       <h3>Добавленные</h3>
       <div class="spam-chats__list">
         <div class="row">
@@ -190,5 +197,6 @@ const isValidate = computed(() => form.value.time_send && form.value.to_chats);
         </div>
       </div>
     </div>
+    <el-empty v-else description="Нет добавленных" />
   </div>
 </template>

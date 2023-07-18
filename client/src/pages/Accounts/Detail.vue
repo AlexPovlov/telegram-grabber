@@ -9,6 +9,7 @@ import * as api from "~/requests/accounts";
 const route = useRoute();
 const router = useRouter();
 const account = ref<IAccount>();
+const search = ref("");
 
 getData();
 
@@ -41,31 +42,40 @@ async function getData() {
     <div class="chat-list" v-if="account.chats">
       <h3 class="chat-list__title">Чаты</h3>
       <div class="row">
-        <div class="col-12 col-lg-6 mb-4" v-for="item in account.chats">
-          <el-card class="chat-list__item" style="height: 100%">
-            <template #header>
-              <div>
-                <el-button
-                  type="primary"
-                  size="small"
-                  @click="router.push(`/spam-chats/${account.id}/${item.id}`)"
-                >
-                  <el-icon class="mr-1"><ChatLineSquare /></el-icon>
-                  Спамлист
-                </el-button>
-              </div>
-            </template>
-            <el-text class="chat-list__item-id d-block mb-2">
-              <el-text type="primary">ID: </el-text>
-              {{ item.chat_id }}
-            </el-text>
-            <el-text class="chat-list__item-title d-block">
-              <el-text type="primary">Название: </el-text>
-              {{ item.title }}
-            </el-text>
-          </el-card>
+        <div class="col-12 col-md-6 col-lg-4">
+          <el-input class="mb-4" placeholder="Поиск..." v-model="search">
+          </el-input>
         </div>
       </div>
+      <div class="row">
+        <template v-for="item in account.chats">
+          <div class="col-12 col-lg-6 mb-4" v-if="item.title.includes(search)">
+            <el-card class="chat-list__item" style="height: 100%">
+              <template #header>
+                <div>
+                  <el-button
+                    type="primary"
+                    size="small"
+                    @click="router.push(`/spam-chats/${account.id}/${item.id}`)"
+                  >
+                    <el-icon class="mr-1"><ChatLineSquare /></el-icon>
+                    Спамлист
+                  </el-button>
+                </div>
+              </template>
+              <el-text class="chat-list__item-id d-block mb-2">
+                <el-text type="primary">ID: </el-text>
+                {{ item.chat_id }}
+              </el-text>
+              <el-text class="chat-list__item-title d-block">
+                <el-text type="primary">Название: </el-text>
+                {{ item.title }}
+              </el-text>
+            </el-card>
+          </div>
+        </template>
+      </div>
     </div>
+    <el-empty v-else description="Нет чатов" />
   </div>
 </template>
