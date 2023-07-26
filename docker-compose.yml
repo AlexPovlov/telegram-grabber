@@ -1,33 +1,27 @@
-version: "3"
+version: '3'
 
 services:
   nginx:
     restart: always
     image: nginx:latest
     ports:
-      - "80:80"
+      - '80:80'
     volumes:
       - ./_docker/nginx:/etc/nginx/conf.d
       - ./logs:/www/telegram/logs
+      - ./client/dist:/www/vueapp
     depends_on:
-      - app
+      - backend
+      - frontend
 
-  python: &base_app # restart: always
+  backend:
+    restart: always
     build:
       context: .
       dockerfile: _docker/python/Dockerfile
-    volumes:
-      - ./:/www/telegram
-
+    command: 'uvicorn src.main:app --workers 4 --host 0.0.0.0 --port 8000 --root-path /api/v1'
     depends_on:
       - postgres
-
-  app:
-    <<: *base_app
-    restart: always
-    command: "uvicorn src.main:app --workers 4 --host 0.0.0.0 --port 8000 --root-path /api/v1"
-    depends_on:
-      - python
 
   postgres:
     image: postgres:alpine
@@ -40,11 +34,13 @@ services:
       - telegrampgdata:/var/lib/postgresql/data
 
   frontend: # Add the frontend service for Vue.js
-    image: node:latest
-    working_dir: /www/vueapp
+    build:
+      context: .
+      dockerfile: _docker/vue/Dockerfile
     volumes:
-      - ./client:/www/vueapp # Mount the Vue.js application directory
-    command: "npm run serve" # Command to start the development server
+      - ./client:/www/vueapp
+      - ./client/node_modules:/www/vueapp/node_modules
+      - ./client/dist:/www/vueapp/dist
 
 volumes:
   telegrampgdata:
