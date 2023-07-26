@@ -14,6 +14,7 @@ import type { IAccount } from "~/interfaces/IAccount";
 import * as api from "~/requests/accounts";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
+import { useProgress } from "~/composables/useProgress";
 
 const router = useRouter();
 const form = ref<{ phone: string }>({ phone: "" });
@@ -23,8 +24,12 @@ const search = ref("");
 getData();
 
 async function getData() {
+  const progress = useProgress();
+  progress.emitStart();
   let { data } = await api.all();
-  accounts.value = data;
+  progress.emitEnd(async () => {
+    accounts.value = data;
+  });
 }
 
 async function deleteAccount(id?: number) {
@@ -36,7 +41,7 @@ async function deleteAccount(id?: number) {
     });
     try {
       await api.logout(id);
-      getData();
+      setTimeout(getData, 1000);
       ElMessage.success("Аккаунт успешно удален");
     } catch (error) {
       ElMessage.warning("Что-то пошло не так");
@@ -93,7 +98,7 @@ async function addAccount() {
         </div>
       </div>
     </el-form>
-    <div class="accounts-list" v-if="accounts.length">
+    <div class="common-list" v-if="accounts.length">
       <h3>
         <el-icon><Notebook /></el-icon> Список добвленных
       </h3>
@@ -109,14 +114,14 @@ async function addAccount() {
             class="col-12 col-md-6 col-lg-4 mb-4"
             v-if="item.phone.includes(search)"
           >
-            <el-card class="accounts-list__item">
+            <el-card class="common-list__item">
               <template #header>
-                <div class="d-flex justify-content-between">
+                <div class="d-flex">
                   <el-button
                     @click="router.push(`/detail/${item.id}`)"
                     size="small"
                     :icon="View"
-                    type="success"
+                    type="primary"
                   >
                     Простотр
                   </el-button>
@@ -129,25 +134,25 @@ async function addAccount() {
                 </div>
               </template>
 
-              <div class="accounts-list__item-info">
+              <div class="common-list__item-info">
                 <el-tooltip
                   v-if="item.auth"
                   content="Авторизовано"
                   placement="top"
                 >
-                  <el-icon class="accounts-list__item-info-status success">
+                  <el-icon class="common-list__item-info-status success">
                     <CircleCheckFilled />
                   </el-icon>
                 </el-tooltip>
 
                 <el-tooltip v-else content="Не авторизовано" placement="top">
-                  <el-icon class="accounts-list__item-info-status warning">
+                  <el-icon class="common-list__item-info-status warning">
                     <WarningFilled />
                   </el-icon>
                 </el-tooltip>
 
-                <div class="accounts-list__item-info-phone">
-                  <el-icon class="accounts-list__item-info-phone-icon">
+                <div class="common-list__item-info-phone">
+                  <el-icon class="common-list__item-info-phone-icon">
                     <Phone />
                   </el-icon>
                   {{ item.phone }}
@@ -158,5 +163,6 @@ async function addAccount() {
         </template>
       </div>
     </div>
+    <el-empty v-else description="Нет добавленных" />
   </div>
 </template>

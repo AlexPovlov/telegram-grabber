@@ -46,6 +46,7 @@ async function login() {
         </el-form-item>
         <el-form-item label="Пароль">
           <el-input
+            show-password
             placeholder="Введите пароль..."
             v-model="form.password"
             type="password"

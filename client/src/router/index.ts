@@ -43,6 +43,11 @@ const router = createRouter({
           // @ts-ignore
           component: () => import("~/pages/Accounts/Detail.vue"),
         },
+        {
+          path: "spam-chats/:account_id/:chat_id",
+          // @ts-ignore
+          component: () => import("~/pages/Accounts/SpamChats.vue"),
+        },
       ],
     },
   ],
