@@ -39,6 +39,13 @@ services:
     volumes:
       - telegrampgdata:/var/lib/postgresql/data
 
+  frontend: # Add the frontend service for Vue.js
+    image: node:latest
+    working_dir: /www/vueapp
+    volumes:
+      - ./client:/www/vueapp # Mount the Vue.js application directory
+    command: "npm run serve" # Command to start the development server
+
 volumes:
   telegrampgdata:
     external: true
