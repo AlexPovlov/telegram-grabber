@@ -10,6 +10,9 @@ class AccountService:
     def __init__(self, repo: AccountRepository = Depends(AccountRepository)):
         self.repo = repo
 
+    async def get_all(self):
+        return await self.repo.get_all()
+
     async def get(self, account_id):
         account = await self.repo.get(account_id)
         if not account:

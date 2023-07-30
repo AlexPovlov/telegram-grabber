@@ -1,4 +1,5 @@
 from telethon import TelegramClient, errors
+from telethon import functions, types
 
 from src.conf import (
     TELEGRAM_API_HASH,
@@ -36,10 +37,10 @@ class Sender:
         except Exception as e:
             raise e
 
-    async def get_chats(self, limit=10):
+    async def get_chats(self, limit=10, offset_date=None):
         # dialogs = await self.client.get_dialogs(limit=10)
         # # print(dialogs)
-        return await self.client.get_dialogs(limit=limit)
+        return await self.client.get_dialogs(limit=limit, offset_date=offset_date)
 
     async def send(self):
         chat = await self.client.get_entity("")
@@ -53,6 +54,24 @@ class Sender:
 
     async def forward_messages(self, chat_to, message):
         return await self.client.forward_messages(chat_to, message)
+
+    async def block(self, id):
+        return await self.client(functions.contacts.BlockRequest(id))
+
+    async def report(self, peer, msg_id):
+        return await self.client(
+            functions.messages.ReportSpamRequest(
+                peer=peer,
+            )
+        )
+
+    async def clean(self, peer):
+        return await self.client(
+            functions.messages.DeleteHistoryRequest(
+                peer=peer,
+                max_id=0,
+            )
+        )
 
     # async def mass_send(self, chat_id_from, chat_ids_to):
     #     chat_from = await self.client.get_entity(int(chat_id_from))

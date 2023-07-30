@@ -31,4 +31,5 @@ models = [
     "src.models.grabber_chat",
     "src.models.spam_chat",
     "src.models.user",
+    "src.models.spam_filter",
 ]
