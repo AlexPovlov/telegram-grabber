@@ -33,7 +33,7 @@ class SpamFilterService:
 
     async def idi_nahui_spamer(self, phone):
         async with Sender(phone) as sender:
-            chats = await sender.get_chats(offset_date=datetime.datetime.now()- datetime.timedelta(days=1), limit=500)
+            chats = await sender.get_chats(limit=500)
             filters = await self.get_all()
             for chat in chats:
                 if chat.unread_count > 0 and isinstance(chat.entity, User):

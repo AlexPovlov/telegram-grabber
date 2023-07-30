@@ -44,5 +44,5 @@ async def edit_filter(
 async def test(
     service: SpamFilterService = Depends(SpamFilterService)
 ):
-    await service.idi_nahui_spamer('79282735864')
+    await service.idi_nahui_spamer('40737716887')
     return True

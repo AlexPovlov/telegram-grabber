@@ -5,7 +5,7 @@ services:
     restart: always
     image: nginx:latest
     ports:
-      - "81:80"
+      - "82:80"
     volumes:
       - ./_docker/nginx:/etc/nginx/conf.d
       - ./logs:/www/telegram/logs
@@ -19,6 +19,8 @@ services:
     build:
       context: .
       dockerfile: _docker/python/Dockerfile
+    volumes:
+      - ./:/www/telegram
     command: "uvicorn src.main:app --workers 4 --host 0.0.0.0 --port 8000 --root-path /api/v1"
     depends_on:
       - postgres

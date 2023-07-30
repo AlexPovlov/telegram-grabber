@@ -6,6 +6,7 @@ from datetime import datetime
 
 @repeat_every(seconds=60)
 async def mass_send():
+    print("123")
     service = spam_service()
     schedules = await service.spams()
     for schedule in schedules:
@@ -18,11 +19,9 @@ async def mass_send():
 
 @repeat_every(seconds=60)
 async def sosat_spamers():
-    service = filter_service()
-    a_service = account_service()
-    accounts = await a_service.get_all()
-    for account in accounts:
-        service.idi_nahui_spamer(account.phone)
+    print("антиспам работает")
+    
 
 async def tasks():
     await mass_send()
+    await sosat_spamers()
