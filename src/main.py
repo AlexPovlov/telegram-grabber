@@ -18,7 +18,7 @@ from .routers.chat_router import router as chat_router
 from .routers.spam_chat_router import router as spam_chat_router
 from .routers.spam_filter_router import router as spam_filter_router
 from .routers.grabber_chat_router import router as grabber_chat_router
-from .tasks import tasks, sosat_spamers
+from .tasks import tasks
 
 app = FastAPI(debug=APP_DEBUG, title=APP_NAME)
 
@@ -44,8 +44,7 @@ async def startup():
     # Запуск подключения к базе в tortoise orm
     await init_db()
     # Крон
-
-    await sosat_spamers()
+    await tasks()
 
 
 @app.on_event("shutdown")
